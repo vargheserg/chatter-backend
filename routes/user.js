@@ -52,7 +52,7 @@ router.post('/signup', async function(req, res) {
   const doesExists = await User.exists({
     username: req.body.username
   });
-
+  
   if (doesExists) {
     return res.status(409).json({ // Not sure about the response code
       message: "Username exists"
@@ -64,6 +64,7 @@ router.post('/signup', async function(req, res) {
   const hashedPassword = crypto.scryptSync(req.body.password, salt, 64).toString("hex");
 
   const newUser = new User({
+    userID: crypto.randomUUID(),
     name: req.body.name,
     username: req.body.username,
     salt: salt,
