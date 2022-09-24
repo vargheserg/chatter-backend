@@ -5,6 +5,10 @@ var express = require('express'),
 const app = express()
 const port = 3000
 
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+  }
+
 app.use('/user',  user);
 app.use('/conversation',  conversation);
 
