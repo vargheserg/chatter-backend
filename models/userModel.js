@@ -1,28 +1,27 @@
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
-  userID: String,
   name: String,
   username: String,
   salt: String,
   password: String,
   friendList: {
     type: [{
-      userID: String,
+      userID: mongoose.Schema.Types.ObjectId,
       username: String
     }],
     default: []
   },
   blockList: {
     type: [{
-      userID: String,
+      userID:  mongoose.Schema.Types.ObjectId,
       username: String
     }],
     default: []
   },
   conversations: {
     type: [{
-      conversationID: String,
+      conversationID: mongoose.Schema.Types.ObjectId,
       conversationName: String
     }],
     default: []

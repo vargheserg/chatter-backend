@@ -1,6 +1,7 @@
 const User = require("../models/userModel")
 const crypto = require("crypto");
 const express = require('express');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ router.post('/login', async function(req, res) {
   });
 
   if (!user) {
-    return res.status(404).json({ 
+    return res.status(404).json({
       message: "User not found"
     });
   };
@@ -35,12 +36,21 @@ router.post('/login', async function(req, res) {
     });
   };
 
+  const userID = user._id.toString();
+
+  const token = jwt.sign({
+    userID: userID
+  }, process.env.JWT_SECRET, {
+    expiresIn: '30d'
+  })
+
   res.status(201).json({
-    message: "Success"
+    message: "Success",
+    token: token
   });
 });
 
-router.post('/signup', async function(req, res) { 
+router.post('/signup', async function(req, res) {
   if (!req.body.name ||
     !req.body.username ||
     !req.body.password) {
@@ -52,7 +62,7 @@ router.post('/signup', async function(req, res) {
   const doesExists = await User.exists({
     username: req.body.username
   });
-  
+
   if (doesExists) {
     return res.status(409).json({ // Not sure about the response code
       message: "Username exists"
@@ -64,7 +74,6 @@ router.post('/signup', async function(req, res) {
   const hashedPassword = crypto.scryptSync(req.body.password, salt, 64).toString("hex");
 
   const newUser = new User({
-    userID: crypto.randomUUID(),
     name: req.body.name,
     username: req.body.username,
     salt: salt,
@@ -72,8 +81,17 @@ router.post('/signup', async function(req, res) {
   });
   await newUser.save();
 
+  const userID = newUser._id.toString();
+
+  const token = jwt.sign({
+    userID: userID
+  }, process.env.JWT_SECRET, {
+    expiresIn: '30d'
+  })
+
   res.status(201).json({
-    message: "Success"
+    message: "Success",
+    token: token
   });
 });
 
