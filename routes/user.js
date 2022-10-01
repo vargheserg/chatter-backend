@@ -1,44 +1,44 @@
-const User = require('../models/userModel')
-const crypto = require('crypto')
-const express = require('express')
-const jwt = require('jsonwebtoken')
+const User = require("../models/userModel");
+const crypto = require("crypto");
+const express = require("express");
+const jwt = require("jsonwebtoken");
 
-const router = express.Router()
+const router = express.Router();
 
 /*
     Return JWT for session?
     Update response message schema??
 */
 
-router.post('/login', async function (req, res) {
+router.post("/login", async function (req, res) {
     if (!req.body.username || !req.body.password) {
         return res.status(400).json({
-            message: 'Invalid Request',
-        })
+            message: "Invalid Request",
+        });
     }
 
     const user = await User.findOne({
         username: req.body.username,
-    })
+    });
 
     if (!user) {
         return res.status(404).json({
-            message: 'User not found',
-        })
+            message: "User not found",
+        });
     }
 
     const hashedPassword = crypto
         .scryptSync(req.body.password, user.salt, 64)
-        .toString('hex')
+        .toString("hex");
 
     if (hashedPassword !== user.password) {
         return res.status(401).json({
             // Not sure about the response code
-            message: 'Invalid password',
-        })
+            message: "Invalid password",
+        });
     }
 
-    const userID = user._id.toString()
+    const userID = user._id.toString();
 
     const token = jwt.sign(
         {
@@ -46,49 +46,49 @@ router.post('/login', async function (req, res) {
         },
         process.env.JWT_SECRET,
         {
-            expiresIn: '30d',
+            expiresIn: "30d",
         }
-    )
+    );
 
     res.status(201).json({
-        message: 'Success',
+        message: "Success",
         token: token,
-    })
-})
+    });
+});
 
-router.post('/signup', async function (req, res) {
+router.post("/signup", async function (req, res) {
     if (!req.body.name || !req.body.username || !req.body.password) {
         return res.status(400).json({
-            message: 'Invalid request',
-        })
+            message: "Invalid request",
+        });
     }
 
     const doesExists = await User.exists({
         username: req.body.username,
-    })
+    });
 
     if (doesExists) {
         return res.status(409).json({
             // Not sure about the response code
-            message: 'Username exists',
-        })
+            message: "Username exists",
+        });
     }
 
-    const salt = crypto.randomBytes(16).toString('hex')
+    const salt = crypto.randomBytes(16).toString("hex");
 
     const hashedPassword = crypto
         .scryptSync(req.body.password, salt, 64)
-        .toString('hex')
+        .toString("hex");
 
     const newUser = new User({
         name: req.body.name,
         username: req.body.username,
         salt: salt,
         password: hashedPassword,
-    })
-    await newUser.save()
+    });
+    await newUser.save();
 
-    const userID = newUser._id.toString()
+    const userID = newUser._id.toString();
 
     const token = jwt.sign(
         {
@@ -96,20 +96,20 @@ router.post('/signup', async function (req, res) {
         },
         process.env.JWT_SECRET,
         {
-            expiresIn: '30d',
+            expiresIn: "30d",
         }
-    )
+    );
 
     res.status(201).json({
-        message: 'Success',
+        message: "Success",
         token: token,
-    })
-})
+    });
+});
 
 function createMissingParamMessage(res, missingValue) {
     return res.status(400).json({
         error: `Invalid Request - Missing ${missingValue}`,
-    })
+    });
 }
 
-module.exports = router
+module.exports = router;

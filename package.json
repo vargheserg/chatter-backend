@@ -26,5 +26,8 @@
         "mongoose": "^6.6.1",
         "pusher-js": "^7.4.0",
         "swagger-ui-express": "^4.5.0"
+    },
+    "devDependencies": {
+        "prettier": "2.7.1"
     }
 }
