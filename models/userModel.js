@@ -5,11 +5,13 @@ const userSchema = mongoose.Schema({
     username: String,
     salt: String,
     password: String,
+    status: String,
     friendList: {
         type: [
             {
                 userID: mongoose.Schema.Types.ObjectId,
                 username: String,
+                status: String,
             },
         ],
         default: [],
