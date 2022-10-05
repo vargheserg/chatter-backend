@@ -16,7 +16,7 @@ const conversationSchema = mongoose.Schema({
             {
                 userID: mongoose.Schema.Types.ObjectId,
                 message: String,
-                timeSent: Date,
+                timeSent: {type: Date, default: Date.now()},
             },
         ],
         default: [],
