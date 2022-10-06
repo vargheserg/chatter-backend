@@ -30,7 +30,8 @@ router.post("/", async function (req, res) {
     });
     await newConversation.save();
     return res.status(200).json({
-        ...newConversation._doc,
+        message: "Conversation Created",
+        conversationId: newConversation._id
     });
 });
 
