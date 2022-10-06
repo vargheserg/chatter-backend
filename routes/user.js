@@ -85,6 +85,7 @@ router.post("/signup", async function (req, res) {
         username: req.body.username,
         salt: salt,
         password: hashedPassword,
+        status: "online",
     });
     await newUser.save();
 

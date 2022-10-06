@@ -62,6 +62,9 @@
                 "password": {
                     "type": "string"
                 },
+                "status": {
+                    "type": "string"
+                },
                 "blockList": {
                     "type": "array",
                     "items": {
