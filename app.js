@@ -5,6 +5,12 @@ const conversation = require("./routes/conversation");
 const app = express();
 app.use(express.json());
 
+var env = process.env.NODE_ENV || 'development';
+
+if(env == "development"){
+    require("dotenv").config()
+}
+
 const port = 3000;
 
 const swaggerUi = require("swagger-ui-express");
@@ -13,7 +19,6 @@ const swaggerDocument = require("./swagger.json");
 const mongoose = require("mongoose");
 
 const CONNECTION_URI = process.env.MONGODB_URI || "mongodb://localhost/chatter";
-
 mongoose.connect(CONNECTION_URI, (err) => {
     if (err) {
         console.log(err);

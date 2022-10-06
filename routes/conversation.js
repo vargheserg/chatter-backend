@@ -31,6 +31,7 @@ router.post("/", async function (req, res) {
     await newConversation.save();
     return res.status(200).json({
         message: "Conversation Created",
+        conversationId: newConversation._id
     });
 });
 
@@ -54,11 +55,9 @@ router.put("/:conversationId", async function (req, res) {
         });
     }
 
-    conversation = Conversation.findById(req.params.conversationId);
-    conversation.messages.add(message);
-    await conversation.save();
+    await Conversation.updateOne({_id: req.params.conversationId}, {$push: {messages: req.body.message}});
     return res.status(200).json({
-        message: "Message Sent",
+        message: "Message Updated"
     });
 });
 
