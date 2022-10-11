@@ -25,6 +25,17 @@ mongoose.connect(CONNECTION_URI, (err) => {
     }
 });
 
+const Pusher = require('pusher');
+const PusherAppKey = "abe185cdca80fe92b3cb";
+
+global.pusher = new Pusher({
+    appId: "1486742",
+    key: PusherAppKey,
+    secret: "15e92005073082c4f99d",
+  cluster: "us2",
+});
+
+
 const options = {
     definition: {
         servers: [
