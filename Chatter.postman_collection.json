@@ -1,186 +1,354 @@
 {
-	"info": {
-		"_postman_id": "cf9bc3bb-a506-4430-b2f7-9559c69a6d84",
-		"name": "Chatter",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Sign Up User",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"{{sampleName}}\",\r\n    \"username\":\"{{sampleUsername}}\",\r\n    \"password\":\"{{samplePassword}}\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{userRoute}}/signup",
-					"host": [
-						"{{userRoute}}"
-					],
-					"path": [
-						"signup"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Login",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\":\"{{sampleUsername}}\",\r\n    \"password\":\"{{samplePassword}}\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{userRoute}}/login",
-					"host": [
-						"{{userRoute}}"
-					],
-					"path": [
-						"login"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Conversation",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "authorization",
-						"value": "",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\":\"{{sampleConversationName}}\",\r\n    \"users\": [{\r\n        \"userId\": \"\",\r\n        \"username\": \"{{sampleUsername}}\"\r\n    }]\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{conversationRoute}}",
-					"host": [
-						"{{conversationRoute}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Send Message",
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "authorization",
-						"value": "",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"message\": {\r\n        \"userId\":\"\",\r\n        \"message\": \"{{sampleMessage}}\"\r\n    }\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{conversationRoute}}/633da1003d501de8f8c3b7b2",
-					"host": [
-						"{{conversationRoute}}"
-					],
-					"path": [
-						"633da1003d501de8f8c3b7b2"
-					]
-				}
-			},
-			"response": []
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "url",
-			"value": "http://localhost:3000"
-		},
-		{
-			"key": "conversationRoute",
-			"value": "{{url}}/conversation"
-		},
-		{
-			"key": "userRoute",
-			"value": "{{url}}/user"
-		},
-		{
-			"key": "sampleConversationName",
-			"value": "FriendsOnly"
-		},
-		{
-			"key": "sampleName",
-			"value": "JohnDoe"
-		},
-		{
-			"key": "sampleUsername",
-			"value": "jdoe"
-		},
-		{
-			"key": "samplePassword",
-			"value": "password"
-		},
-		{
-			"key": "sampleMessage",
-			"value": "Hi its me, John!"
-		}
-	]
+    "info": {
+        "_postman_id": "cf9bc3bb-a506-4430-b2f7-9559c69a6d84",
+        "name": "Chatter",
+        "description": "Chatter's Automated Test Suite to Validate that endpoints are correctly returning data.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Local",
+            "item": [
+                {
+                    "name": "Sign Up User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Create a user using sign up endpoint\", function() {\r",
+                                    "    if(pm.environment.count > 1) {\r",
+                                    "        pm.response.to.have.status(201);\r",
+                                    "        postman.setNextRequest(\"Sign Up User\");\r",
+                                    "    } else if (pm.environment.count > 0) {\r",
+                                    "        pm.response.to.have.status(409);\r",
+                                    "    }\r",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": ["pm.environment.set(\"count\", 2);"],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"name\": \"{{sampleName}}\",\r\n    \"username\":\"{{sampleUsername}}\",\r\n    \"password\":\"{{samplePassword}}\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{userRoute}}/signup",
+                            "host": ["{{userRoute}}"],
+                            "path": ["signup"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Authorize a user login endpoint\", function() {\r",
+                                    "    pm.response.to.have.status(201);\r",
+                                    "    const jsonData =  pm.response.json();\r",
+                                    "    postman.setEnvironmentVariable(\"token\", jsonData.token);\r",
+                                    "    postman.setEnvironmentVariable(\"userId\", jsonData.id);\r",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"username\":\"{{sampleUsername}}\",\r\n    \"password\":\"{{samplePassword}}\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{userRoute}}/login",
+                            "host": ["{{userRoute}}"],
+                            "path": ["login"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Conversation",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Create a conversation\", function() {\r",
+                                    "    pm.response.to.have.status(200);\r",
+                                    "    const jsonData =  pm.response.json();\r",
+                                    "    postman.setEnvironmentVariable(\"conversationId\", jsonData.conversationId);\r",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "authorization",
+                                "value": "{{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"name\":\"{{sampleConversationName}}\",\r\n    \"users\": [{\r\n        \"userId\": \"{{pm.environment.userId}}\",\r\n        \"username\": \"{{sampleUsername}}\"\r\n    }]\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{conversationRoute}}",
+                            "host": ["{{conversationRoute}}"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Send Message",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Post a message\", function() {\r",
+                                    "    pm.response.to.have.status(200);\r",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "authorization",
+                                "value": "{{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"message\": {\r\n        \"userId\":\"{{userId}}\",\r\n        \"message\": \"{{sampleMessage}}\"\r\n    }\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{conversationRoute}}/{{conversationId}}",
+                            "host": ["{{conversationRoute}}"],
+                            "path": ["{{conversationId}}"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Conversation",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Delete a conversation\", function() {\r",
+                                    "    pm.response.to.have.status(200);\r",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "authorization",
+                                "value": "{{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{conversationRoute}}/{{conversationId}}",
+                            "host": ["{{conversationRoute}}"],
+                            "path": ["{{conversationId}}"]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Delete a user\", function() {\r",
+                                    "    pm.response.to.have.status(200);\r",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": ["pm.environment.set(\"count\", 2);"],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "authorization",
+                                "value": "{{token}}",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{userRoute}}/{{userId}}",
+                            "host": ["{{userRoute}}"],
+                            "path": ["{{userId}}"]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [""]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [""]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "url",
+            "value": "http://localhost:3000"
+        },
+        {
+            "key": "conversationRoute",
+            "value": "{{url}}/conversation"
+        },
+        {
+            "key": "userRoute",
+            "value": "{{url}}/user"
+        },
+        {
+            "key": "sampleConversationName",
+            "value": "FriendsOnly"
+        },
+        {
+            "key": "sampleName",
+            "value": "JohnDoe"
+        },
+        {
+            "key": "sampleUsername",
+            "value": "jdoe"
+        },
+        {
+            "key": "samplePassword",
+            "value": "password"
+        },
+        {
+            "key": "sampleMessage",
+            "value": "Hi its me, John!"
+        },
+        {
+            "key": "testUserId",
+            "value": ""
+        },
+        {
+            "key": "testConversationId",
+            "value": ""
+        },
+        {
+            "key": "testAuthHeader",
+            "value": ""
+        }
+    ]
 }
