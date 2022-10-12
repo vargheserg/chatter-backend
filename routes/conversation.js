@@ -31,12 +31,13 @@ router.post("/", async function (req, res) {
     await newConversation.save();
 
     req.body.users.forEach(user => { // Emits the event to the user to create the conversation
-        pusher.trigger(user.userId, "create-conversation", { 
+        pusher.trigger(user.userId, "user-event", { 
+            eventType: "create-conversation",
             conversationId: newConversation._id,
             name: req.body.name,
-            users: req.body.users, // Include the user that actually init the conv since its missing from this array?
+            users: req.body.users,
         });
-        // Won't ping the user that creates the convo - Frontend handles
+        // Won't ping the user that creates the convo - Frontend handles?
     });
     
     return res.status(200).json({
@@ -66,7 +67,7 @@ router.put("/:conversationId", async function (req, res) {
     }
 
     await Conversation.updateOne({_id: req.params.conversationId}, {$push: {messages: req.body.message}});
-
+    // Return the inserted message id?
     pusher.trigger(req.params.conversationId, "message", req.body.message);
 
     return res.status(200).json({

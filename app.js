@@ -5,10 +5,10 @@ const conversation = require("./routes/conversation");
 const app = express();
 app.use(express.json());
 
-var env = process.env.NODE_ENV || 'development';
+var env = process.env.NODE_ENV || "development";
 
-if(env == "development"){
-    require("dotenv").config()
+if (env == "development") {
+    require("dotenv").config();
 }
 
 const port = 3000;
@@ -25,16 +25,15 @@ mongoose.connect(CONNECTION_URI, (err) => {
     }
 });
 
-const Pusher = require('pusher');
+const Pusher = require("pusher");
 const PusherAppKey = "abe185cdca80fe92b3cb";
 
 global.pusher = new Pusher({
     appId: "1486742",
     key: PusherAppKey,
-    secret: "15e92005073082c4f99d",
-  cluster: "us2",
+    secret: process.env.PUSHER_SECRET,
+    cluster: "us2",
 });
-
 
 const options = {
     definition: {
