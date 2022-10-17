@@ -5,6 +5,211 @@
         "title": "Chatter",
         "version": "1.0.0"
     },
+    "paths": {
+        "/user/login":{
+            "post": {
+                "description": "Checks if valid username and password combination exists",
+                "parameters": [{
+                    "in":"body",
+                    "name":"Login Form", 
+                    "description": "Username and Password",
+                    "schema": {
+                        "type": "object"
+                    },
+                    "required":"true",
+                    "example": "{\"username\":\"jdoe\",\"password\":\"securePassword\"}"
+                    }
+                ],
+                "responses": {
+                  "200": {          
+                    "description": "Returns authorization token on success",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "400": {          
+                    "description": "Bad Request, Lacking Parameters",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "404": {          
+                    "description": "Username not found",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+        },
+        "/user/signup":{
+            "post": {
+                "description": "Create a User",
+                "parameters": [{
+                    "in":"body",
+                    "name":"Sign Up Form", 
+                    "description": "Name, Username and Password",
+                    "schema": {
+                        "type": "object"
+                    },
+                    "required":"true",
+                    "example": "{\"name\":\"John Doe\",\"username\":\"jdoe\",\"password\":\"securePassword\"}"
+                    }
+                ],
+                "responses": {
+                  "200": {          
+                    "description": "Returns authorization token on success",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "400": {          
+                    "description": "Bad Request, Lacking Parameters",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "409": {          
+                    "description": "Username already exists",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+        },
+        "/conversation":{
+            "post": {
+                "description": "Create Conversation",
+                "parameters": [{
+                    "in":"body",
+                    "name":"Conversation Form", 
+                    "description": "Conversation Name and Users",
+                    "schema": {
+                        "type": "object"
+                    },
+                    "required":"true",
+                    "example": "{\"name\":\"BackendGang\",\"users\":[{\"userId\":\"someId\",\"username\":\"jdoe\"}]}"
+                    }
+                ],
+                "responses": {
+                  "200": {          
+                    "description": "Returns authorization token on success",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "400": {          
+                    "description": "Bad Request, Lacking Parameters",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "404": {          
+                    "description": "Username not found from authorization header",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+        },
+        "/conversation/{conversationId}":{
+            "put": {
+                "description": "Create a Message",
+                "parameters": [
+                    {
+                        "in":"path",
+                        "name":"conversationId", 
+                        "description": "Id of Conversation",
+                        "schema": {
+                            "type": "object"
+                        },
+                        "required":"true",
+                        "example": "someId"
+                    },
+                    {
+                    "in":"body",
+                    "name":"Message Form", 
+                    "description": "Conversation Name",
+                    "schema": {
+                        "type": "object"
+                    },
+                    "required":"true",
+                    "example": "{\"userId\":\"someId\",\"message\":\"Does anyone know how to run a local set up?\"}"
+                    }
+                ],
+                "responses": {
+                  "200": {          
+                    "description": "Returns authorization token on success",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "400": {          
+                    "description": "Bad Request, Lacking Parameters",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "404": {          
+                    "description": "Username not found from authorization header",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+        }
+    },
     "definitions": {
         "Conversation": {
             "type": "object",
