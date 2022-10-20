@@ -11,7 +11,7 @@ if(env == "development"){
     require("dotenv").config()
 }
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
