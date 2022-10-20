@@ -114,11 +114,20 @@
                     },
                     "required":"true",
                     "example": "{\"name\":\"BackendGang\",\"users\":[{\"userId\":\"someId\",\"username\":\"jdoe\"}]}"
+                    },
+                    {
+                      "in":"header",
+                      "name":"Authorization", 
+                      "description": "The user's authorization header",
+                      "schema": {
+                          "type": "string"
+                      },
+                      "required":"true"
                     }
                 ],
                 "responses": {
                   "200": {          
-                    "description": "Returns authorization token on success",
+                    "description": "Returns conversation id on success",
                     "message": {
                       "application/json": {
                         "schema": {
@@ -173,11 +182,20 @@
                     },
                     "required":"true",
                     "example": "{\"userId\":\"someId\",\"message\":\"Does anyone know how to run a local set up?\"}"
+                    },
+                    {
+                      "in":"header",
+                      "name":"Authorization", 
+                      "description": "The user's authorization header",
+                      "schema": {
+                          "type": "string"
+                      },
+                      "required":"true"
                     }
                 ],
                 "responses": {
                   "200": {          
-                    "description": "Returns authorization token on success",
+                    "description": "Confirms successful message added to conversation",
                     "message": {
                       "application/json": {
                         "schema": {
