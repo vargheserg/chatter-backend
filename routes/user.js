@@ -53,6 +53,7 @@ router.post("/login", async function (req, res) {
     res.status(201).json({
         message: "Success",
         token: token,
+        id: userID,
     });
 });
 
@@ -104,6 +105,23 @@ router.post("/signup", async function (req, res) {
     res.status(201).json({
         message: "Success",
         token: token,
+    });
+});
+
+router.delete("/:userId", async function (req, res) {
+    const doesExists = await User.exists({
+        _id: req.params.userId,
+    });
+
+    if (!doesExists) {
+        return res.status(404).json({
+            message: "User does not exist",
+        });
+    }
+    await User.deleteOne({_id: req.params.userId});
+
+    res.status(200).json({
+        message: "Success",
     });
 });
 
