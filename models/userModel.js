@@ -11,7 +11,6 @@ const userSchema = mongoose.Schema({
             {
                 userID: mongoose.Schema.Types.ObjectId,
                 username: String,
-                status: String,
             },
         ],
         default: [],
