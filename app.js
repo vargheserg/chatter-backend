@@ -2,8 +2,14 @@ const express = require("express");
 const user = require("./routes/user");
 const conversation = require("./routes/conversation");
 
+const userStatus = require("./routes/userStatus");
+
+
+const cors = require('cors')
 const app = express();
+
 app.use(express.json());
+app.use(cors())
 
 var env = process.env.NODE_ENV || "development";
 
@@ -11,7 +17,7 @@ if (env == "development") {
     require("dotenv").config();
 }
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
@@ -55,7 +61,7 @@ app.use(
 );
 app.use("/user", user);
 app.use("/conversation", conversation);
-
+app.use("/userStatus", userStatus)
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }

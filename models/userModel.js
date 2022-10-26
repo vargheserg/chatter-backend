@@ -5,6 +5,7 @@ const userSchema = mongoose.Schema({
     username: String,
     salt: String,
     password: String,
+    status: String,
     friendList: {
         type: [
             {
