@@ -135,4 +135,42 @@ router.get("/:conversationId", async function (req, res) {
     });
 });
 
+router.get("/messages/:conversationId/", async function (req, res) {
+    if (!req.headers.authorization) {
+        return res.status(400).json({
+            message: "Invalid request",
+        });
+    }
+    var timeSentBefore = req.body.timeSentBefore;
+    if(timeSentBefore == null) {
+        timeSentBefore = new Date();
+    }
+
+    const userID = verifyToken(req.headers.authorization);
+    if (!userID) {
+        return res.status(440).json({
+            message: "Invalid Credentials",
+        });
+    }
+
+    const conversation = await Conversation.find( {_id: req.path.conversationId, messages: {timeSent: { $lte: timeSentBefore }}})
+    .limit( 10 )
+    .sort( '-timeSent' );
+
+    if (conversation == null) {
+        return res.status(404).json({
+            message: "Conversation does not exist",
+        });
+    }
+
+    
+
+    
+    return res.status(200).json({
+        ...conversation._doc
+    });
+});
+
+
+
 module.exports = router;
