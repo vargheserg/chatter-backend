@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const crypto = require("crypto");
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const verifyToken = require("../utils/verifyToken");
 
 const router = express.Router();
 
@@ -130,5 +131,34 @@ function createMissingParamMessage(res, missingValue) {
         error: `Invalid Request - Missing ${missingValue}`,
     });
 }
+
+router.put("/updateStatus", async function (req, res) {
+    if (!req.headers.authorization) {
+        return res.status(400).json({
+            message: "Invalid request",
+        });
+    }
+
+    const userID = verifyToken(req.headers.authorization);
+
+    if (!userID) {
+        return res.status(440).json({
+            message: "Invalid Credentials",
+        });
+    }
+        
+    if (!req.body.status) {
+        return res.status(400).json({
+            message: "Invalid Request",
+        });
+    }
+
+    await User.updateOne({_id:userID},{$set: {status: req.body.status}});
+
+    
+    return res.status(200).json({
+        message: "Status updated",
+    });
+});
 
 module.exports = router;
