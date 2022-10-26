@@ -11,10 +11,10 @@ const app = express();
 app.use(express.json());
 app.use(cors())
 
-var env = process.env.NODE_ENV || 'development';
+var env = process.env.NODE_ENV || "development";
 
-if(env == "development"){
-    require("dotenv").config()
+if (env == "development") {
+    require("dotenv").config();
 }
 
 const port = process.env.PORT || 3000;
@@ -29,6 +29,16 @@ mongoose.connect(CONNECTION_URI, (err) => {
     if (err) {
         console.log(err);
     }
+});
+
+const Pusher = require("pusher");
+const PusherAppKey = "abe185cdca80fe92b3cb";
+
+global.pusher = new Pusher({
+    appId: "1486742",
+    key: PusherAppKey,
+    secret: process.env.PUSHER_SECRET,
+    cluster: "us2",
 });
 
 const options = {
