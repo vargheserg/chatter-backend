@@ -102,6 +102,55 @@
                 }
               }
         },
+        "/user/{userId}":{
+          "delete": {
+              "description": "Delete a User",
+              "parameters": [
+                {
+                    "in":"path",
+                    "name":"userId", 
+                    "description": "Id of User",
+                    "schema": {
+                        "type": "object"
+                    },
+                    "required":"true",
+                    "example": "someId"
+                  }
+              ],
+              "responses": {
+                "200": {          
+                  "description": "Returns authorization token on success",
+                  "message": {
+                    "application/json": {
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "400": {          
+                  "description": "Bad Request, Lacking Parameters",
+                  "message": {
+                    "application/json": {
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "409": {          
+                  "description": "Username already exists",
+                  "message": {
+                    "application/json": {
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+      },
         "/conversation":{
             "post": {
                 "description": "Create Conversation",
@@ -196,6 +245,118 @@
                 "responses": {
                   "200": {          
                     "description": "Confirms successful message added to conversation",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "400": {          
+                    "description": "Bad Request, Lacking Parameters",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "404": {          
+                    "description": "Username not found from authorization header",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "get": {
+                "description": "Get Conversation",
+                "parameters": [
+                    {
+                        "in":"path",
+                        "name":"conversationId", 
+                        "description": "Id of Conversation",
+                        "schema": {
+                            "type": "object"
+                        },
+                        "required":"true",
+                        "example": "someId"
+                    },
+                    {
+                      "in":"header",
+                      "name":"Authorization", 
+                      "description": "The user's authorization header",
+                      "schema": {
+                          "type": "string"
+                      },
+                      "required":"true"
+                    }
+                ],
+                "responses": {
+                  "200": {          
+                    "description": "Returns conversation on success",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "400": {          
+                    "description": "Bad Request, Lacking Parameters",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "404": {          
+                    "description": "Username not found from authorization header",
+                    "message": {
+                      "application/json": {
+                        "schema": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "delete": {
+                "description": "Delete Conversation",
+                "parameters": [
+                    {
+                        "in":"path",
+                        "name":"conversationId", 
+                        "description": "Id of Conversation",
+                        "schema": {
+                            "type": "object"
+                        },
+                        "required":"true",
+                        "example": "someId"
+                    },
+                    {
+                      "in":"header",
+                      "name":"Authorization", 
+                      "description": "The user's authorization header",
+                      "schema": {
+                          "type": "string"
+                      },
+                      "required":"true"
+                    }
+                ],
+                "responses": {
+                  "200": {          
+                    "description": "Deletes conversation on success",
                     "message": {
                       "application/json": {
                         "schema": {
