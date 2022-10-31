@@ -161,4 +161,39 @@ router.put("/updateStatus", async function (req, res) {
     });
 });
 
+router.get("/search/:userName", async function (req, res) {
+    if (!req.headers.authorization) {
+        return res.status(400).json({
+            message: "Invalid request",
+        });
+    }
+
+    const userID = verifyToken(req.headers.authorization);
+
+    if (!userID) {
+        return res.status(440).json({
+            message: "Invalid Credentials",
+        });
+    }
+        
+    if (!req.body.status) {
+        return res.status(400).json({
+            message: "Invalid Request",
+        });
+    };
+
+    let foundUsers = await User.find({
+        username: { '$regex' : req.params.userName, '$options' : 'i' }
+    });
+
+    foundUsers = foundUsers.map(tempUser => {
+        return {
+            "_id": tempUser._id,
+            "username": tempUser.username
+        }
+    })
+
+    return res.status(200).json(foundUsers);
+});
+
 module.exports = router;
