@@ -119,7 +119,7 @@ router.delete("/:userId", async function (req, res) {
             message: "User does not exist",
         });
     }
-    await User.deleteOne({ _id: req.params.userId });
+    await User.deleteOne({_id: req.params.userId});
 
     res.status(200).json({
         message: "Success",
@@ -146,23 +146,16 @@ router.put("/updateStatus", async function (req, res) {
             message: "Invalid Credentials",
         });
     }
-
+        
     if (!req.body.status) {
         return res.status(400).json({
             message: "Invalid Request",
         });
     }
 
-    const updateUser = await User.findByIdAndUpdate(
-        { _id: userID },
-        { $set: { status: req.body.status } },
-        {new: true}
-    );
+    await User.updateOne({_id:userID},{$set: {status: req.body.status}});
 
-    updateUser.conversations.forEach(convo => { // Updates based on convo
-        pusher.trigger(convo.conversationId, "status", req.body.status);
-    });
-
+    
     return res.status(200).json({
         message: "Status updated",
     });

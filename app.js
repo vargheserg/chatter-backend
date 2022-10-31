@@ -2,11 +2,11 @@ const express = require("express");
 const user = require("./routes/user");
 const conversation = require("./routes/conversation");
 
-const cors = require("cors");
+const cors = require('cors')
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors())
 
 var env = process.env.NODE_ENV || "development";
 
