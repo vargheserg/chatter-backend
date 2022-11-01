@@ -175,13 +175,7 @@ router.get("/search/:userName", async function (req, res) {
             message: "Invalid Credentials",
         });
     }
-        
-    if (!req.body.status) {
-        return res.status(400).json({
-            message: "Invalid Request",
-        });
-    };
-
+    
     let foundUsers = await User.find({
         username: { '$regex' : req.params.userName, '$options' : 'i' }
     });
