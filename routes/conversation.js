@@ -106,11 +106,23 @@ router.delete("/:conversationId", async function (req, res) {
     });
 });
 
-router.get("/:conversationId", async function (req, res) {
+router.get("/messages/:conversationId/", async function (req, res) {
     if (!req.headers.authorization) {
         return res.status(400).json({
             message: "Invalid request",
         });
+    }
+    timeSent = req.query.timeSentBefore;
+    var timeSentFilter;
+    if(timeSent == undefined || !timeSent) {
+        timeSentFilter = new Date()
+    } else {
+        timeSentFilter = new Date(timeSent);
+    }
+
+    size = parseInt(req.query.size);
+    if(size == undefined || !size) {
+        size = 10;
     }
 
     const userID = verifyToken(req.headers.authorization);
@@ -126,7 +138,8 @@ router.get("/:conversationId", async function (req, res) {
             messages: {$filter: {
                 input: '$messages',
                 as: 'message',
-                cond: {$lte: ['$$message.timeSent', new Date()]}
+                limit: size,
+                cond: {$lte: ['$$message.timeSent', timeSentFilter]}
             }}
         }}
     ])
