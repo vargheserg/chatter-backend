@@ -6,7 +6,13 @@ const cors = require('cors')
 const app = express();
 
 app.use(express.json());
-app.use(cors())
+app.use(cors({
+    "origin": "*",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204,
+    "credentials": true
+}));
 
 var env = process.env.NODE_ENV || "development";
 
