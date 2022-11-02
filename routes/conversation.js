@@ -1,6 +1,7 @@
 const express = require("express");
 const verifyToken = require("../utils/verifyToken");
 const Conversation = require("../models/conversationModel");
+const ObjectId = require('mongodb').ObjectId;
 
 const router = express.Router();
 
@@ -119,20 +120,27 @@ router.get("/:conversationId", async function (req, res) {
         });
     }
 
-    const conversation = await Conversation.findById(req.params.conversationId);
+    const conversation = await Conversation.aggregate([
+        { $match: {_id: new ObjectId(req.params.conversationId)}},
+        { $project: {
+            messages: {$filter: {
+                input: '$messages',
+                as: 'message',
+                cond: {$lte: ['$$message.timeSent', new Date()]}
+            }}
+        }}
+    ])
 
-    if (conversation == null) {
+      if (conversation == null) {
         return res.status(404).json({
-            message: "Conversation does not exist",
+          message: "Conversation does not exist",
         });
-    }
-
+      }
     
-
     
-    return res.status(200).json({
-        ...conversation._doc
-    });
+    
+    
+      return res.status(200).json(conversation);
 });
 
 router.get("/messages/:conversationId/", async function (req, res) {
