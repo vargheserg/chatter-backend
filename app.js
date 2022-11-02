@@ -2,7 +2,7 @@ const express = require("express");
 const user = require("./routes/user");
 const conversation = require("./routes/conversation");
 
-const cors = require('cors')
+const cors = require("cors");
 const app = express();
 
 app.use(express.json());
