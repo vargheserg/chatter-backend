@@ -2,6 +2,7 @@ const express = require("express");
 const verifyToken = require("../utils/verifyToken");
 const Conversation = require("../models/conversationModel");
 const ObjectId = require('mongodb').ObjectId;
+const Users = require("../models/userModel");
 
 const router = express.Router();
 
