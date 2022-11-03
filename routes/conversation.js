@@ -31,8 +31,12 @@ router.post("/", async function (req, res) {
     });
     await newConversation.save();
 
-    req.body.users.forEach(user => { // Emits the event to the user to create the conversation
-        pusher.trigger(user.userId, "user-event", { 
+    bindConvoToUser(userID, newConversation._id, req.body.name);
+
+    req.body.users.forEach((user) => {
+        // Emits the event to the user to create the conversation
+        bindConvoToUser(user.userId, newConversation._id, req.body.name);
+        pusher.trigger(user.userId, "user-event", {
             eventType: "create-conversation",
             conversationId: newConversation._id,
             name: req.body.name,
@@ -40,12 +44,28 @@ router.post("/", async function (req, res) {
         });
         // Won't ping the user that creates the convo - Frontend handles?
     });
-    
+
     return res.status(200).json({
         message: "Conversation Created",
-        conversationId: newConversation._id
+        conversationId: newConversation._id,
     });
 });
+
+async function bindConvoToUser(userID, convoID, convoName) {
+    return Users.updateOne(
+        {
+            _id: userID,
+        },
+        {
+            $push: {
+                conversations: {
+                    conversationID: convoID,
+                    conversationName: convoName,
+                },
+            },
+        }
+    );
+}
 
 router.put("/:conversationId", async function (req, res) {
     if (!req.headers.authorization) {
@@ -67,12 +87,15 @@ router.put("/:conversationId", async function (req, res) {
         });
     }
 
-    await Conversation.updateOne({_id: req.params.conversationId}, {$push: {messages: req.body.message}});
+    await Conversation.updateOne(
+        { _id: req.params.conversationId },
+        { $push: { messages: req.body.message } }
+    );
     // Return the inserted message id?
     pusher.trigger(req.params.conversationId, "message", req.body.message);
 
     return res.status(200).json({
-        message: "Message Updated"
+        message: "Message Updated",
     });
 });
 
@@ -100,9 +123,9 @@ router.delete("/:conversationId", async function (req, res) {
         });
     }
 
-    await Conversation.deleteOne({_id: req.params.conversationId});
+    await Conversation.deleteOne({ _id: req.params.conversationId });
     return res.status(200).json({
-        message: "Conversation Deleted"
+        message: "Conversation Deleted",
     });
 });
 
@@ -175,7 +198,7 @@ router.get("/:conversationId", async function (req, res) {
     }
 
     return res.status(200).json({
-        ...conversation._doc
+        ...conversation._doc,
     });
 });
 

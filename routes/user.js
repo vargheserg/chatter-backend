@@ -109,6 +109,38 @@ router.post("/signup", async function (req, res) {
     });
 });
 
+router.get("/:userId", async function (req, res) {
+    if (!req.headers.authorization) {
+        return res.status(400).json({
+            message: "Invalid request",
+        });
+    }
+
+    const userID = verifyToken(req.headers.authorization);
+    if (!userID || req.params.userId !== userID) {
+        return res.status(440).json({
+            message: "Invalid Credentials",
+        });
+    }
+
+    const user = await User.findById(req.params.userId);
+
+    if (user == null) {
+        return res.status(404).json({
+            message: "User does not exist",
+        });
+    }
+
+    let userData = {
+        ...user._doc,
+    };
+
+    delete userData.salt;
+    delete userData.password;
+
+    return res.status(200).json(userData);
+});
+
 router.delete("/:userId", async function (req, res) {
     const doesExists = await User.exists({
         _id: req.params.userId,
@@ -119,7 +151,7 @@ router.delete("/:userId", async function (req, res) {
             message: "User does not exist",
         });
     }
-    await User.deleteOne({_id: req.params.userId});
+    await User.deleteOne({ _id: req.params.userId });
 
     res.status(200).json({
         message: "Success",
@@ -146,19 +178,55 @@ router.put("/updateStatus", async function (req, res) {
             message: "Invalid Credentials",
         });
     }
-        
+
     if (!req.body.status) {
         return res.status(400).json({
             message: "Invalid Request",
         });
     }
 
-    await User.updateOne({_id:userID},{$set: {status: req.body.status}});
+    const updateUser = await User.findByIdAndUpdate(
+        { _id: userID },
+        { $set: { status: req.body.status } },
+        {new: true}
+    );
 
-    
+    updateUser.conversations.forEach(convo => { // Updates based on convo
+        pusher.trigger(convo.conversationId, "status", req.body.status);
+    });
+
     return res.status(200).json({
         message: "Status updated",
     });
+});
+
+router.get("/search/:userName", async function (req, res) {
+    if (!req.headers.authorization) {
+        return res.status(400).json({
+            message: "Invalid request",
+        });
+    }
+
+    const userID = verifyToken(req.headers.authorization);
+
+    if (!userID) {
+        return res.status(440).json({
+            message: "Invalid Credentials",
+        });
+    }
+    
+    let foundUsers = await User.find({
+        username: { '$regex' : req.params.userName, '$options' : 'i' }
+    });
+
+    foundUsers = foundUsers.map(tempUser => {
+        return {
+            "_id": tempUser._id,
+            "username": tempUser.username
+        }
+    })
+
+    return res.status(200).json(foundUsers);
 });
 
 module.exports = router;
