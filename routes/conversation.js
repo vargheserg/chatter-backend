@@ -1,6 +1,7 @@
 const express = require("express");
 const verifyToken = require("../utils/verifyToken");
 const Conversation = require("../models/conversationModel");
+const ObjectId = require('mongodb').ObjectId;
 const Users = require("../models/userModel");
 
 const router = express.Router();
@@ -129,6 +130,53 @@ router.delete("/:conversationId", async function (req, res) {
     });
 });
 
+router.get("/messages/:conversationId/", async function (req, res) {
+    if (!req.headers.authorization) {
+        return res.status(400).json({
+            message: "Invalid request",
+        });
+    }
+    timeSent = req.query.timeSentBefore;
+    var timeSentFilter;
+    if(timeSent == undefined || !timeSent) {
+        timeSentFilter = new Date()
+    } else {
+        timeSentFilter = new Date(timeSent);
+    }
+
+    size = parseInt(req.query.size);
+    if(size == undefined || !size) {
+        size = 10;
+    }
+
+    const userID = verifyToken(req.headers.authorization);
+    if (!userID) {
+        return res.status(440).json({
+            message: "Invalid Credentials",
+        });
+    }
+
+    const conversation = await Conversation.aggregate([
+        { $match: {_id: new ObjectId(req.params.conversationId)}},
+        { $project: {
+            messages: {$filter: {
+                input: '$messages',
+                as: 'message',
+                limit: size,
+                cond: {$lte: ['$$message.timeSent', timeSentFilter]}
+            }}
+        }}
+    ])
+
+      if (conversation == null) {
+        return res.status(404).json({
+          message: "Conversation does not exist",
+        });
+      }
+
+      return res.status(200).json(conversation);
+});
+
 router.get("/:conversationId", async function (req, res) {
     if (!req.headers.authorization) {
         return res.status(400).json({
@@ -143,8 +191,7 @@ router.get("/:conversationId", async function (req, res) {
         });
     }
 
-    const conversation = await Conversation.findById(req.params.conversationId);
-
+    const conversation = await Conversation.findById(new ObjectId(req.params.conversationId));
     if (conversation == null) {
         return res.status(404).json({
             message: "Conversation does not exist",
