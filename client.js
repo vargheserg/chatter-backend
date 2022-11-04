@@ -30,9 +30,9 @@ channel.bind("user-event", function (data) {
 function createConversationBind(channelID) {
     const conversationChannel = pusher.subscribe(channelID);
     conversationChannel.bind("message", function (data) {
-        console.log("New Message Recieved: " + data);
+        console.log("New Message Recieved: " + JSON.stringify(data));
     });
     conversationChannel.bind("status", function (data) {
-        console.log("New Status Received: " + data);
+        console.log("New Status Received: " + JSON.stringify(data));
     });
 };
