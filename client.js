@@ -15,7 +15,8 @@ pusher.connection.bind("unavailable", () => {
     console.log("Websocket Disconnected");
 });
 
-const channel = pusher.subscribe("6345daac2f7844c1be088e2c");
+const channel = pusher.subscribe("6364486c9957127f2da5da66");
+createConversationBind("6364486c9957127f2da5da69");
 
 channel.bind("user-event", function (data) {
     switch (data.eventType) {
@@ -29,9 +30,9 @@ channel.bind("user-event", function (data) {
 function createConversationBind(channelID) {
     const conversationChannel = pusher.subscribe(channelID);
     conversationChannel.bind("message", function (data) {
-        console.log(data);
+        console.log("New Message Recieved: " + data);
     });
     conversationChannel.bind("status", function (data) {
-        console.log(data);
+        console.log("New Status Received: " + data);
     });
 };

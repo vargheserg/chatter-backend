@@ -88,7 +88,7 @@ router.put("/:conversationId", async function (req, res) {
 
     await Conversation.updateOne(
         { _id: req.params.conversationId },
-        { $push: { messages: req.body.message } }
+        { $push: { messages: req.body } }
     );
     // Return the inserted message id?
     pusher.trigger(req.params.conversationId, "message", req.body.message);
