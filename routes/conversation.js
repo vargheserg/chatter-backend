@@ -32,8 +32,6 @@ router.post("/", async function (req, res) {
     });
     await newConversation.save();
 
-    bindConvoToUser(userID, newConversation._id, req.body.name);
-
     req.body.users.forEach((user) => {
         // Emits the event to the user to create the conversation
         bindConvoToUser(user.userId, newConversation._id, req.body.name);
