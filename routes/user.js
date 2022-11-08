@@ -185,14 +185,17 @@ router.put("/updateStatus", async function (req, res) {
         });
     }
 
-    const updateUser = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
         { _id: userID },
         { $set: { status: req.body.status } },
         {new: true}
     );
 
-    updateUser.conversations.forEach(convo => { // Updates based on convo
-        pusher.trigger(convo.conversationId, "status", req.body.status);
+    updatedUser.conversations.forEach(convo => { // Updates based on convo
+        pusher.trigger(convo.conversationID.toString(), "status", {
+            userID: userID,
+            status: req.body.status
+        });
     });
 
     return res.status(200).json({
