@@ -86,7 +86,7 @@ router.put("/:conversationId", async function (req, res) {
         });
     }
 
-    const updatedUser = await Conversation.updateOne(
+   const updatedUser = await Conversation.updateOne(
         { _id: req.params.conversationId },
         { $push: { messages: req.body } }
     );
@@ -101,9 +101,20 @@ router.put("/:conversationId", async function (req, res) {
         {new: true}
     );*/
 
+    const user = await Users.findById(
+        {
+            _id: userID,
+        },
+        {
+            username: 1, 
+            _id: 0
+        }
+    );
+
     // Return the inserted message id?
     pusher.trigger(req.params.conversationId, "message", {
         userID: userID,
+        username: user.username,
         message: req.body.message
     });
 
