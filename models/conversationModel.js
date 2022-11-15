@@ -15,6 +15,7 @@ const conversationSchema = mongoose.Schema({
         type: [
             {
                 userID: mongoose.Schema.Types.ObjectId,
+                username: String,
                 message: String,
                 timeSent: { type: Date, default: Date.now },
             },
