@@ -219,7 +219,7 @@
                       "type": "object"
                   },
                   "required":"true",
-                  "example": "{\"name\":\"Become Scrum Master\",\"details\":\"Don't tell Ashwin\" ,\"purpose\":\"Organization Restructure\", \"conversationId\":\"Some Conversation Id\",\"time\":\"2022-10-26T17:39:36.530Z\"}"
+                  "example": "{\"name\":\"Become Scrum Master\",\"location\":\"Ashwins Home\",\"details\":\"Don't tell Ashwin\" ,\"purpose\":\"Organization Restructure\", \"conversationId\":\"Some Conversation Id\",\"time\":\"2022-10-26T17:39:36.530Z\"}"
                   },
                   {
                     "in":"header",
@@ -467,7 +467,7 @@
                       "type": "object"
                   },
                   "required":"true",
-                  "example": "{\"name\":\"Become Scrum Master\",\"details\":\"Don't tell Ashwin\" ,\"purpose\":\"Organization Restructure\", \"conversationId\":\"Some Conversation Id\",\"time\":\"2022-10-26T17:39:36.530Z\"}"
+                  "example": "{\"name\":\"Become Scrum Master\",\"location\":\"Ashwins Home\",\"details\":\"Don't tell Ashwin\" ,\"purpose\":\"Organization Restructure\", \"conversationId\":\"Some Conversation Id\",\"time\":\"2022-10-26T17:39:36.530Z\"}"
                   },
                   {
                     "in":"header",
@@ -624,7 +624,123 @@
                 }
               }
             }
-      }
+      },
+      "/event/user/{userId}":{
+          "get": {
+            "description": "Get Events from a user",
+            "parameters": [
+                {
+                    "in":"path",
+                    "name":"userId", 
+                    "description": "Id of User",
+                    "schema": {
+                        "type": "object"
+                    },
+                    "required":"true",
+                    "example": "someId"
+                },
+                {
+                  "in":"header",
+                  "name":"Authorization", 
+                  "description": "The user's authorization header",
+                  "schema": {
+                      "type": "string"
+                  },
+                  "required":"true"
+                }
+            ],
+            "responses": {
+              "200": {          
+                "description": "Returns List of Events on success",
+                "message": {
+                  "application/json": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "400": {          
+                "description": "Bad Request, Lacking Parameters",
+                "message": {
+                  "application/json": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "404": {          
+                "description": "Username not found from authorization header",
+                "message": {
+                  "application/json": {
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+      },
+      "/event/conversation/{conversationId}":{
+        "get": {
+          "description": "Get Events from a conversation",
+          "parameters": [
+              {
+                  "in":"path",
+                  "name":"conversationId", 
+                  "description": "Id of Conversation",
+                  "schema": {
+                      "type": "object"
+                  },
+                  "required":"true",
+                  "example": "someId"
+              },
+              {
+                "in":"header",
+                "name":"Authorization", 
+                "description": "The user's authorization header",
+                "schema": {
+                    "type": "string"
+                },
+                "required":"true"
+              }
+          ],
+          "responses": {
+            "200": {          
+              "description": "Returns List of Events on success",
+              "message": {
+                "application/json": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "400": {          
+              "description": "Bad Request, Lacking Parameters",
+              "message": {
+                "application/json": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "404": {          
+              "description": "Username not found from authorization header",
+              "message": {
+                "application/json": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+    }
     },
     "definitions": {
         "Conversation": {
