@@ -32,7 +32,7 @@ router.post("/", async function (req, res) {
         purpose: req.body.purpose,
         location: req.body.location,
         time: req.body.time,
-        details: req.body.time
+        details: req.body.details
     });
     await newEvent.save();
 
