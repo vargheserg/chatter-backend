@@ -32,7 +32,7 @@ router.post("/", async function (req, res) {
         purpose: req.body.purpose,
         location: req.body.location,
         time: req.body.time,
-        details: req.body.time
+        details: req.body.details
     });
     await newEvent.save();
 
@@ -153,9 +153,7 @@ router.get("/user/:userId", async function (req, res) {
     .map(function (element) {
         return element._id;
     });
-    console.log(conversationIDList);
     const events = await Event.find({"conversationId": {$in :conversationIDList}});
-    console.log(events);
 
     if (events == null) {
         return res.status(404).json({
