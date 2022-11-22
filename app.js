@@ -1,5 +1,6 @@
 const express = require("express");
 const user = require("./routes/user");
+const event = require("./routes/event");
 const conversation = require("./routes/conversation");
 
 const cors = require("cors");
@@ -64,6 +65,7 @@ app.use(
 );
 app.use("/user", user);
 app.use("/conversation", conversation);
+app.use("/event", event);
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
 }
