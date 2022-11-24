@@ -146,10 +146,16 @@ router.put("/:conversationId", async function (req, res) {
           }
     });
 
-    return res.status(200).json({
-        message: "Message updated",
-        event: event
-    });
+    if (event.intent == 'create_event') {
+        return res.status(200).json({
+            message: "Message sent",
+            event: event
+        });
+    } else {
+        return res.status(200).json({
+            message: "Message sent"
+        });
+    }
 });
 
 router.delete("/:conversationId", async function (req, res) {
