@@ -148,12 +148,12 @@ router.put("/:conversationId", async function (req, res) {
 
     if (event.intent == 'create_event') {
         return res.status(200).json({
-            message: "Message sent",
+            message: "Message updated",
             event: event
         });
     } else {
         return res.status(200).json({
-            message: "Message sent"
+            message: "Message updated"
         });
     }
 });
