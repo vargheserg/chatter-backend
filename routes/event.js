@@ -149,11 +149,15 @@ router.get("/user/:userId", async function (req, res) {
         });
     }
 
-    const conversationIDList = await (await Conversation.find({"users.userId": new ObjectId(req.params.userId)}))
-    .map(function (element) {
+    var conversationIDList = await Conversation.find({"users.userId": new ObjectId(req.params.userId)})
+    
+    conversationIDList = conversationIDList.map(function (element) {
         return element._id;
     });
-    const events = await Event.find({"conversationId": {$in :conversationIDList}});
+    var events = await Event.find({"conversationId": {$in :conversationIDList}})
+    events = events
+    .filter(event => new Date(event.time).toISOString() > new Date().toISOString() > 0)
+    .sort((a,b) => a.date - b.date);
 
     if (events == null) {
         return res.status(404).json({
@@ -180,8 +184,10 @@ router.get("/conversation/:conversationId", async function (req, res) {
         });
     }
 
-    const events = await Event.find({"conversationId": req.params.conversationId});
-    console.log(events);
+    var events = await Event.find({"conversationId": req.params.conversationId});
+    events = events
+    .filter(event => new Date(event.time).toISOString() > new Date().toISOString() > 0)
+    .sort((a,b) => a.date - b.date);
 
     if (events == null) {
         return res.status(404).json({
