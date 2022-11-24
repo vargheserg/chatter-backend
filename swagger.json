@@ -149,8 +149,102 @@
                   }
                 }
               }
+            },
+            "get": {
+              "description": "Query a User by Id",
+              "parameters": [
+                {
+                    "in":"path",
+                    "name":"userId", 
+                    "description": "Id of User",
+                    "schema": {
+                        "type": "object"
+                    },
+                    "required":"true",
+                    "example": "someId"
+                  },
+                  {
+                    "in":"header",
+                    "name":"Authorization", 
+                    "description": "The user's authorization header",
+                    "schema": {
+                        "type": "string"
+                    },
+                    "required":"true"
+                  }
+              ],
+              "responses": {
+                "200": {          
+                  "description": "Returns User Object on Success",
+                  "message": {
+                    "application/json": {
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "400": {          
+                  "description": "Bad Request",
+                  "message": {
+                    "application/json": {
+                      "schema": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
             }
       },
+    "/user/search/{userName}":{
+      "get": {
+          "description": "Query a User by Name",
+          "parameters": [
+            {
+                "in":"path",
+                "name":"userName", 
+                "description": "Username of the User",
+                "schema": {
+                    "type": "object"
+                },
+                "required":"true",
+                "example": "gendaddy"
+              },
+              {
+                "in":"header",
+                "name":"Authorization", 
+                "description": "The user's authorization header",
+                "schema": {
+                    "type": "string"
+                },
+                "required":"true"
+              }
+          ],
+          "responses": {
+            "200": {          
+              "description": "Returns User Object(s) on Success",
+              "message": {
+                "application/json": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "400": {          
+              "description": "Bad Request",
+              "message": {
+                "application/json": {
+                  "schema": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+  },
         "/conversation":{
             "post": {
                 "description": "Create Conversation",
