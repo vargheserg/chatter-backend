@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
     friendList: {
         type: [
             {
-                userID: mongoose.Schema.Types.ObjectId,
+                userId: mongoose.Schema.Types.ObjectId,
                 username: String,
             },
         ],
@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema({
     blockList: {
         type: [
             {
-                userID: mongoose.Schema.Types.ObjectId,
+                userId: mongoose.Schema.Types.ObjectId,
                 username: String,
             },
         ],

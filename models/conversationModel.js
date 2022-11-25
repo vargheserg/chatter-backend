@@ -5,7 +5,7 @@ const conversationSchema = mongoose.Schema({
     users: {
         type: [
             {
-                userID: mongoose.Schema.Types.ObjectId,
+                userId: mongoose.Schema.Types.ObjectId,
                 username: String,
             },
         ],
@@ -14,7 +14,7 @@ const conversationSchema = mongoose.Schema({
     messages: {
         type: [
             {
-                userID: mongoose.Schema.Types.ObjectId,
+                userId: mongoose.Schema.Types.ObjectId,
                 username: String,
                 message: String,
                 timeSent: { type: Date, default: Date.now },
