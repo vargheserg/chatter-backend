@@ -3,6 +3,7 @@ const verifyToken = require("../utils/verifyToken");
 const Conversation = require("../models/conversationModel");
 const ObjectId = require('mongodb').ObjectId;
 const Users = require("../models/userModel");
+const fetch = require("node-fetch");
 
 const router = express.Router();
 
@@ -122,9 +123,39 @@ router.put("/:conversationId", async function (req, res) {
         message: req.body.message
     });
 
-    return res.status(200).json({
-        message: "Message Updated",
+    const uri = process.env.WITAI_URI + encodeURIComponent(req.body.message.message);
+    const auth = 'Bearer ' + process.env.WITAI_KEY;
+
+    let event = {};
+
+    await fetch(uri, {headers: {Authorization: auth}})
+     .then(res => res.json())
+     .then((data) => {
+        if (data.intents.length==1) {
+            if(data.entities.hasOwnProperty('wit$location:location')) 
+              event.location = data.entities['wit$location:location'][0]['value'];
+            if(data.entities.hasOwnProperty('wit$datetime:datetime')) {
+              if(data.entities['wit$datetime:datetime'][0].hasOwnProperty('from')) 
+                event.datetime = new Date(data.entities['wit$datetime:datetime'][0]['from']['value']);
+              else
+                event.datetime = new Date(data.entities['wit$datetime:datetime'][0]['values'][0]['value']);
+            }
+            if(data.entities.hasOwnProperty('purpose:purpose'))
+              event.purpose = (data.entities['purpose:purpose'][0]['value']);
+            event.intent = data.intents[0]['name'];
+          }
     });
+
+    if (event.intent == 'create_event') {
+        return res.status(200).json({
+            message: "Message updated",
+            event: event
+        });
+    } else {
+        return res.status(200).json({
+            message: "Message updated"
+        });
+    }
 });
 
 router.delete("/:conversationId", async function (req, res) {
