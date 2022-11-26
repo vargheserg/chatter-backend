@@ -182,11 +182,35 @@ router.delete("/:conversationId", async function (req, res) {
         });
     }
 
+    const deletedConversation = await Conversation.findOne({ _id: req.params.conversationId });
+
+    deletedConversation.users.forEach(async (user) => {
+        // Unbind each user
+        await unbindConvoToUser(user._id, deletedConversation._id);
+     });
     await Conversation.deleteOne({ _id: req.params.conversationId });
+
     return res.status(200).json({
         message: "Conversation Deleted",
     });
 });
+
+async function unbindConvoToUser(userID, convoID) {
+    return Users.updateOne(
+        {
+            userId: userID,
+        },
+        {
+            $pull: {
+                conversations: {
+                    conversationID: convoID,
+                },
+            },
+        },
+        { new:true, multi:true, upsert: false }
+
+    );
+}
 
 router.get("/messages/:conversationId/", async function (req, res) {
     if (!req.headers.authorization) {
