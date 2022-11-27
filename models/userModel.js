@@ -27,7 +27,7 @@ const userSchema = mongoose.Schema({
     conversations: {
         type: [
             {
-                conversationID: mongoose.Schema.Types.ObjectId,
+                conversationID: String,
                 conversationName: String,
             },
         ],

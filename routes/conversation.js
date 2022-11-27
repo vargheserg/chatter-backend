@@ -99,7 +99,7 @@ router.put("/:conversationId", async function (req, res) {
    const updatedUser = await Conversation.updateOne(
         { _id: req.params.conversationId },
         { $push: { messages: {
-            ...req.body,
+            message: req.body.message.message,    
             userID: userID,
             username: user.username,
          } } }
