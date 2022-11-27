@@ -123,7 +123,7 @@ router.put("/:conversationId", async function (req, res) {
         message: req.body.message
     });
 
-    const uri = process.env.WITAI_URI + encodeURIComponent(req.body.message.message);
+    const uri = process.env.WITAI_URI + encodeURIComponent(req.body.message);
     const auth = 'Bearer ' + process.env.WITAI_KEY;
 
     let event = {};
