@@ -186,7 +186,7 @@ router.delete("/:conversationId", async function (req, res) {
 
     deletedConversation.users.forEach(async (user) => {
         // Unbind each user
-        await unbindConvoToUser(user._id, deletedConversation._id);
+        await unbindConvoToUser(user.userId, deletedConversation._id);
      });
     await Conversation.deleteOne({ _id: req.params.conversationId });
 
