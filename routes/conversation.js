@@ -201,7 +201,7 @@ async function unbindConvoToUser(userID, convoID) {
             _id: userID,
         },
         {
-            $pullAll: {
+            $pull: {
                 conversations: {
                     conversationID: convoID,
                 },
