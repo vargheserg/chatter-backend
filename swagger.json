@@ -721,7 +721,7 @@
       },
       "/event/user/{userId}":{
           "get": {
-            "description": "Get Events from a user",
+            "description": "Get Events from a user filtered by upcoming, sorted by closest dates",
             "parameters": [
                 {
                     "in":"path",
@@ -779,7 +779,7 @@
       },
       "/event/conversation/{conversationId}":{
         "get": {
-          "description": "Get Events from a conversation",
+          "description": "Get Events from a conversation filtered by upcoming, sorted by closest dates",
           "parameters": [
               {
                   "in":"path",
