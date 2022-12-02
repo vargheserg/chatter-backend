@@ -198,7 +198,7 @@ router.delete("/:conversationId", async function (req, res) {
 async function unbindConvoToUser(userID, convoID) {
     return Users.updateOne(
         {
-            userId: userID,
+            _id: userID,
         },
         {
             $pullAll: {
